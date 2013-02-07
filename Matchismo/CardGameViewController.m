@@ -114,7 +114,7 @@
 }
 - (IBAction)historySliderChanged:(UISlider *)sender {
     // link slider movement with flips history array
-    self.resultLabel.text = self.flipsHistory[[[NSNumber numberWithFloat:sender.value] intValue]];
+    self.resultLabel.text = self.flipsHistory[[@(sender.value) intValue]];
         
     //fade result label when checking flips history
     if (sender.value != ([self.flipsHistory count] - 1)) {
