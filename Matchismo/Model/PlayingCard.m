@@ -12,33 +12,61 @@
 
 @synthesize suit = _suit; //because we provide setter and getter
 
-- (int)match:(NSArray *)otherCards
+//Another way to do it
+
+//- (int)match:(NSArray *)otherCards
+//{
+//    int score = 0;
+//    
+//    if ([otherCards count] == 1 || [otherCards count] == 2) {
+//        
+//        int suitMatches = 0;
+//        int rankMatches = 0;
+//        
+//        PlayingCard *otherPlayingCard = nil;
+//        
+//        for (id otherCard in otherCards) {
+//            
+//            if ([otherCard isKindOfClass:[PlayingCard class]]) {
+//                
+//               otherPlayingCard = otherCard;
+//                
+//                if ([self.suit isEqualToString:otherPlayingCard.suit]){
+//                    suitMatches++;
+//                } else if (self.rank == otherPlayingCard.rank){
+//                    rankMatches++;
+//                }
+//            }
+//        }
+//        if (suitMatches == [otherCards count]) score = ([otherCards count] == 1) ? 1 : 5;
+//        else if (rankMatches == [otherCards count]) score = ([otherCards count] == 1) ? 4 : 100;
+//    }
+//    
+//    return score;
+//}
+
+-(int)match:(NSArray *)otherCards
 {
     int score = 0;
     
-    if ([otherCards count] == 1 || [otherCards count] == 2) {
+    NSMutableArray *otherCardsFlipped = [otherCards mutableCopy];
+    
+    for (PlayingCard *otherCard in otherCardsFlipped) {
         
-        int suitMatches = 0;
-        int rankMatches = 0;
-        
-        PlayingCard *otherPlayingCard = nil;
-        
-        for (id otherCard in otherCards) {
-            
-            if ([otherCard isKindOfClass:[PlayingCard class]]) {
-                
-                otherPlayingCard = otherCard;
-                
-                if ([self.suit isEqualToString:otherPlayingCard.suit]){
-                    suitMatches++;
-                } else if (self.rank == otherPlayingCard.rank){
-                    rankMatches++;
-                }
-            }
+        if ([self.suit isEqualToString:otherCard.suit]){
+            score += 1;
+        } else if (self.rank == otherCard.rank){
+            score += 4;
         }
-        if (suitMatches == [otherCards count]) score = ([otherCards count] == 1) ? 1 : 5;
-        else if (rankMatches == [otherCards count]) score = ([otherCards count] == 1) ? 4 : 100;
     }
+    PlayingCard *lastCard = [otherCardsFlipped lastObject];
+    
+    if (lastCard) {
+        [otherCardsFlipped removeLastObject];
+        
+        score += [lastCard match:otherCardsFlipped];
+    }
+    
     
     return score;
 }
