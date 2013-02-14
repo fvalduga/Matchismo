@@ -16,10 +16,8 @@
 @property (readonly, nonatomic) NSString *resultDescription;
 
 //Designated Initializer
-//gameMode: "2" for 2-card-match game OR "3" for 3-card-match
 -(id)initWithCardCount:(NSUInteger)count
-            usingDeck:(Deck *)deck
-          andGameMode:(NSUInteger)gameMode;
+             usingDeck:(Deck *)deck;
 
 -(void)flipCardAtIndex:(NSUInteger)index;
 -(Card *)cardAtIndex:(NSUInteger)index;

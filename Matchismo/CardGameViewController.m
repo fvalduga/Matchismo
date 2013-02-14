@@ -19,7 +19,6 @@
 @property (strong, nonatomic) CardMatchingGame *game;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel; //linked to game.score
 @property (weak, nonatomic) IBOutlet UILabel *resultLabel; //linked to game.resultDescription
-@property (weak, nonatomic) IBOutlet UISegmentedControl *gameMode;
 @property (weak, nonatomic) IBOutlet UISlider *historySlider;
 @property (strong, nonatomic) NSMutableArray *flipsHistory;
 
@@ -31,8 +30,8 @@
 {
     if (!_game) {
         _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
-                                                  usingDeck:[[PlayingCardDeck alloc] init]
-                                                andGameMode:self.gameMode.selectedSegmentIndex + 2];// 0 segment is 2 | 1 segment is 3
+                                                  usingDeck:[[PlayingCardDeck alloc] init]];
+
     }
     return _game;
 }
@@ -98,15 +97,12 @@
     [self.historySlider setValue:self.historySlider.maximumValue];
     
     self.resultLabel.alpha = 1.0;
-    
-    self.gameMode.enabled = NO; //disable gameMode change during the game
     [self updateUI];
 }
 
 - (IBAction)dealPressed {
     self.game = nil; //recreate game when the getter is called in updateUI (Lazy Instantiation)
     self.flipCount = 0;
-    self.gameMode.enabled = YES;
     self.historySlider.enabled = NO;
     self.resultLabel.alpha = 1.0;
     [self.flipsHistory removeAllObjects];
@@ -122,10 +118,6 @@
     } else {
         self.resultLabel.alpha = 1.0;
     }
-}
-
-- (IBAction)gameModeChanged {
-    self.game = nil;
 }
 
 
