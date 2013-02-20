@@ -10,28 +10,78 @@
 
 @implementation SetCard
 
+
 -(int)match:(NSArray *)otherCards
 {
     int score = 0;
-    
-    // implements the logic for comparing cards
+   
+    //Set of 3 cards
+    if ([otherCards count] == 2) {
+        
+        BOOL numberMatched = NO;
+        BOOL colorMatched = NO;
+        BOOL shapeMatched = NO;
+        BOOL shadingMatched = NO;
+        
+        SetCard *c1 = self;
+        SetCard *c2 = nil;
+        SetCard *c3 = nil;
+        
+        if ([otherCards[0] isKindOfClass:[SetCard class]]) {
+            c2 = (SetCard *)otherCards[0];
+        }
+        if ([otherCards[1] isKindOfClass:[SetCard class]]) {
+            c3 = (SetCard *)otherCards[1];
+        }
+        
+        //check if numbers are the same or different from each other
+        
+        if ((c1.number == c2.number && c1.number == c3.number) || 
+            (c1.number != c2.number && c1.number != c3.number && c2.number != c3.number)) { 
+            numberMatched = YES;
+        }
+        
+        //check if colors are the same or different from each other
+        
+        if (([c1.color isEqualToString:c2.color] && [c1.color isEqualToString:c3.color]) ||
+            (![c1.color isEqualToString:c2.color] && ![c1.color isEqualToString:c3.color] && ![c2.color isEqualToString:c3.color])) {
+            colorMatched = YES;
+        }
+        
+        //check if shapes are the same or different from each other
+        
+        if (([c1.shape isEqualToString:c2.shape] && [c1.shape isEqualToString:c3.shape]) ||
+            (![c1.shape isEqualToString:c2.shape] && ![c1.shape isEqualToString:c3.shape] && ![c2.shape isEqualToString:c3.shape])) {
+            shapeMatched = YES;
+        }
+        
+        //check if shading are the same or different from each other
+        
+        if (([c1.shading isEqualToString:c2.shading] && [c1.shading isEqualToString:c3.shading]) ||
+            (![c1.shading isEqualToString:c2.shading] && ![c1.shading isEqualToString:c3.shading] && ![c2.shading isEqualToString:c3.shading])) {
+            shadingMatched = YES;
+        }
+        
+        
+        if (numberMatched && colorMatched && shapeMatched && shadingMatched) {
+            score = 1;
+        }
+        
+        
+    }
     
     return score;
 }
 
+//Return shapes
 -(NSString *)contents
 {
-    NSString *shape = nil;
-    for (int i = 1; i < self.number; i++) {
-        shape = [self.shape stringByAppendingString:self.shape];
-    }
-    
-    return [NSString stringWithFormat:@"%@, %@, %@",shape,self.color,self.shading];
+    return [self.shape stringByPaddingToLength:self.number withString:self.shape startingAtIndex:0];
 }
 
 -(NSString *)description
 {
-    return self.contents;
+    return [self.contents stringByAppendingFormat:@"-%@-%@",self.color,self.shading];
 }
 
 +(NSArray *)validColors

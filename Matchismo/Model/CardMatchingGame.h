@@ -17,7 +17,7 @@
 
 //Designated Initializer
 -(id)initWithCardCount:(NSUInteger)count
-             usingDeck:(Deck *)deck;
+usingDeck:(Deck *)deck matching: (NSUInteger) numberOfCardsToMatch;
 
 -(void)flipCardAtIndex:(NSUInteger)index;
 -(Card *)cardAtIndex:(NSUInteger)index;

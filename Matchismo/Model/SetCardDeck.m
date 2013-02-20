@@ -17,7 +17,7 @@
     
     if (self) {
         
-        for (NSUInteger i = 1; i < 3; i++) {
+        for (NSUInteger i = 1; i <= 3; i++) {
             for (NSString *shape in [SetCard validShapes]) {
                 for (NSString *color in [SetCard validColors]) {
                     for (NSString *shading in [SetCard validShadings]) {
