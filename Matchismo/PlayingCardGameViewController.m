@@ -8,7 +8,7 @@
 
 #import "PlayingCardGameViewController.h"
 #import "PlayingCardDeck.h"
-#import "Card.h"
+#import "PlayingCard.h"
 
 @interface PlayingCardGameViewController ()
 
@@ -36,6 +36,30 @@
     [cardButton setTitle:card.contents forState:UIControlStateSelected];
     [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
     cardButton.alpha = (card.isUnplayable) ? 0.3 : 1.0;
+}
+
+- (NSMutableAttributedString *) getCardsFlippedContents:(NSArray *)cardsFlipped
+{
+    NSMutableAttributedString *cardContents = [[NSMutableAttributedString alloc] initWithString:@""];
+    
+    if (cardsFlipped) {
+        
+        PlayingCard *card = nil;
+        
+        for (int i = 0;  i < [cardsFlipped count]; i++) {
+            
+            if ([cardsFlipped[i] isKindOfClass:[PlayingCard class]]) {
+                card = (PlayingCard *)cardsFlipped[i];
+                [cardContents appendAttributedString:[[NSAttributedString alloc] initWithString:card.contents]];
+                
+                if (i < [cardsFlipped count] - 1) {
+                    [cardContents appendAttributedString:[[NSAttributedString alloc] initWithString:@","]];//separator
+                }
+            }
+        }
+    }
+    
+    return cardContents;
 }
 
 

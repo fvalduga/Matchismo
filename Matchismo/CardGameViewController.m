@@ -15,8 +15,8 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *flipsLabel;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;//order of buttons cant be determined
-@property (weak, nonatomic) IBOutlet UILabel *scoreLabel; //linked to game.score
-@property (weak, nonatomic) IBOutlet UILabel *resultLabel; //linked to game.resultDescription
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
+@property (weak, nonatomic) IBOutlet UILabel *resultLabel;
 @property (weak, nonatomic) IBOutlet UISlider *historySlider;
 
 @property (strong, nonatomic) CardMatchingGame *game;
@@ -27,6 +27,8 @@
 
 @implementation CardGameViewController
 
+
+#define DEFAULT_FONT_SIZE 13
 
 -(void)updateCardButton:(UIButton *)cardButton withCard:(Card *)card
 {
@@ -39,10 +41,16 @@
     return nil;
 }
 
--(NSUInteger) getNumberOfCardsToMatch
+-(NSUInteger)getNumberOfCardsToMatch
 {
     //implemented in subclass
     return 0;
+}
+
+- (NSMutableAttributedString *) getCardsFlippedContents:(NSArray *)cardsFlipped
+{
+    //implemented in subclass
+    return nil;
 }
 
 
@@ -71,8 +79,6 @@
     for (UIButton *button in self.cardButtons) {
         button.imageEdgeInsets = UIEdgeInsetsMake(4.0,4.0,4.0,4.0);
     }
-    
-    [self updateUI];
 }
 
 - (void)updateUI
@@ -84,14 +90,46 @@
         
         [self updateCardButton:cardButton withCard:card];
     }
-    self.resultLabel.alpha = 1.0;
     
     self.scoreLabel.text = [NSString stringWithFormat:@"score: %d", self.game.score];
-    self.resultLabel.text = [NSString stringWithFormat:@"Result: %@", ([self.flipsHistory lastObject]) ? [self.flipsHistory lastObject] : @""];
+    
+    [self updateResultLabel:[self.flipsHistory lastObject]];
+    self.resultLabel.alpha = 1.0;
 }
 
+- (void)updateResultLabel:(id)flipResult
+{
+    NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithString:@"Result: "];
+    
+    if (flipResult || [flipResult isKindOfClass:[NSAttributedString class]]) {
+        [result appendAttributedString: flipResult];
+    }
+    [result addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:DEFAULT_FONT_SIZE] range:NSMakeRange(0, [result length])];
+    self.resultLabel.attributedText = result;
+}
 
-- (void) setFlipCount:(int)flipCount
+- (void)createResultDescription
+{
+    NSArray *cardsFlipped = [self.game.flipResults objectForKey:@"cardsFlipped"];
+    int score = [[self.game.flipResults objectForKey:@"flipScore"] integerValue];
+    
+    NSMutableAttributedString *flipResultText = [self getCardsFlippedContents:cardsFlipped];
+    
+    if ([cardsFlipped count] == [self getNumberOfCardsToMatch]) {
+        if (score > 0) {
+            [flipResultText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" matched for %d points!", score]]];
+        } else {
+            [flipResultText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" don't match. %d points penalty!", -score]]];
+        }
+    } else if ([cardsFlipped count]){
+        [flipResultText appendAttributedString:[[NSAttributedString alloc] initWithString:@" flipped."]];
+    }
+    if ([flipResultText length]) {
+        [self.flipsHistory addObject:flipResultText];
+    }
+}
+
+- (void)setFlipCount:(int)flipCount
 {
     _flipCount = flipCount;
     self.flipsLabel.text = [NSString stringWithFormat:@"Flips: %d",self.flipCount];
@@ -100,11 +138,8 @@
 - (IBAction)flipCard:(UIButton *)sender
 {
     [self.game flipCardAtIndex:[self.cardButtons indexOfObject:sender]];
-    
     self.flipCount++;
-    [self.flipsHistory addObject:[self.game resultDescription]];
-    
-    
+    [self createResultDescription];
     [self updateUI];
 }
 
@@ -114,14 +149,14 @@
     [self.flipsHistory removeAllObjects];
     [self updateUI];
 }
+
 - (IBAction)historySliderChanged:(UISlider *)sender {
     
     // link slider movement with flips history array
     if ([self.flipsHistory count]) {
         self.historySlider.maximumValue = [self.flipsHistory count] - 1;
-        self.resultLabel.text = [@"Result: " stringByAppendingString:self.flipsHistory[[@(sender.value) intValue]]];
+        [self updateResultLabel:self.flipsHistory[[@(sender.value) intValue]]];
     }
-    
     //fade result label when checking flips history
     if (sender.value != ([self.flipsHistory count] - 1)) {
         self.resultLabel.alpha = 0.4;
@@ -130,5 +165,10 @@
     }
 }
 
+- (void) viewDidLoad
+{
+    [super viewDidLoad];
+    [self updateUI];
+}
 
 @end

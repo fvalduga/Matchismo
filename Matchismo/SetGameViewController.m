@@ -35,7 +35,6 @@
     [cardButton setBackgroundColor:(cardButton.selected) ? [UIColor grayColor] : nil];
 
     cardButton.alpha = (card.isUnplayable) ? 0.0 : 1.0;
-    
 }
 
 -(NSDictionary *)getAttributesFromCard:(Card *)card
@@ -70,7 +69,29 @@
     
 }
 
-
+- (NSMutableAttributedString *) getCardsFlippedContents:(NSArray *)cardsFlipped
+{
+    NSMutableAttributedString *cardContents = [[NSMutableAttributedString alloc] initWithString:@""];
+    
+    if (cardsFlipped) {
+        
+        SetCard *card = nil;
+        
+        for (int i = 0;  i < [cardsFlipped count]; i++) {
+            
+            if ([cardsFlipped[i] isKindOfClass:[SetCard class]]) {
+                card = (SetCard *)cardsFlipped[i];
+                [cardContents appendAttributedString:[[NSAttributedString alloc] initWithString:card.contents attributes:[self getAttributesFromCard:card]]];
+                
+                if (i < [cardsFlipped count] - 1) {
+                    [cardContents appendAttributedString:[[NSAttributedString alloc] initWithString:@","]];//separator
+                }
+            }
+        }
+    }
+    
+    return cardContents;
+}
 
 -(void)setup
 {

@@ -64,7 +64,7 @@
         
         
         if (numberMatched && colorMatched && shapeMatched && shadingMatched) {
-            score = 1;
+            score = 2;
         }
         
         

@@ -13,7 +13,12 @@
 @interface CardMatchingGame : NSObject
 
 @property (readonly, nonatomic) int score;
-@property (readonly, nonatomic) NSString *resultDescription;
+
+/* NSDictionary that represent flip card results. It contains 2 keys:
+    @"cardsFlipped" : NSArray with cards flipped
+    @"flipScore"    : NSNumber with match score or penalty
+*/
+@property (readonly, strong, nonatomic) NSDictionary *flipResults;
 
 //Designated Initializer
 -(id)initWithCardCount:(NSUInteger)count

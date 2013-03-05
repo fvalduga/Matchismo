@@ -11,12 +11,10 @@
 @interface CardMatchingGame()
 
 @property (readwrite, nonatomic) int score;
-//readwrite could be supressed but it is there just to get attention because is different than public interface
-
-@property (readwrite, nonatomic) NSString *resultDescription;
 @property (nonatomic) NSUInteger numberOfCardsToMatch;
+@property (strong, nonatomic) NSDictionary *flipResults;
 
-@property (strong, nonatomic) NSMutableArray *cards; //of Card
+@property (strong, nonatomic) NSMutableArray *cards;
 
 @end
 
@@ -37,8 +35,9 @@
 -(void)flipCardAtIndex:(NSUInteger)index
 {
     Card *card = [self cardAtIndex:index];
-    NSMutableArray *cardsFacingUp = [[NSMutableArray alloc] init];
     
+    NSMutableDictionary *results = [[NSMutableDictionary alloc] init];
+    NSMutableArray *cardsFacingUp = [[NSMutableArray alloc] init];
     
     if (card && !card.isFaceUp) {
         for (Card *otherCard in self.cards) {
@@ -46,6 +45,10 @@
                 [cardsFacingUp addObject:otherCard];
             }
         }
+        
+        [results setObject:[cardsFacingUp arrayByAddingObject:card] forKey:@"cardsFlipped"];
+        
+        
         
         if ([cardsFacingUp count] + 1 == self.numberOfCardsToMatch) {
             int matchScore = [card match:cardsFacingUp];
@@ -57,7 +60,7 @@
                 }
                 
                 self.score += matchScore * MATCH_BONUS;
-                self.resultDescription =[NSString stringWithFormat:@"Matched %@&%@ for %d points!",[cardsFacingUp componentsJoinedByString:@"&"],card.contents, matchScore * MATCH_BONUS];
+                [results setObject:@(matchScore * MATCH_BONUS) forKey:@"flipScore"];
             } else {
                 
                 for (Card *otherCard in cardsFacingUp) {
@@ -65,10 +68,8 @@
                 }
                 
                 self.score -= MISMATCH_PENALTY;
-                self.resultDescription = [NSString stringWithFormat:@"%@&%@ don't match!%d point penalty!",[cardsFacingUp componentsJoinedByString:@"&"],card.contents,MISMATCH_PENALTY];
+                [results setObject:@(-MISMATCH_PENALTY) forKey:@"flipScore"];
             }
-        } else {
-            self.resultDescription = [NSString stringWithFormat:@"Flipped up %@",card.contents];
         }
         
         self.score -= FLIP_COST;
@@ -76,6 +77,7 @@
     }
     
     card.faceUp = !card.faceUp;
+    self.flipResults = [results copy];
     
 }
 
