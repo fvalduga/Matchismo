@@ -45,10 +45,7 @@
                 [cardsFacingUp addObject:otherCard];
             }
         }
-        
         [results setObject:[cardsFacingUp arrayByAddingObject:card] forKey:@"cardsFlipped"];
-        
-        
         
         if ([cardsFacingUp count] + 1 == self.numberOfCardsToMatch) {
             int matchScore = [card match:cardsFacingUp];
@@ -58,7 +55,6 @@
                 for (Card *otherCard in cardsFacingUp) {
                     otherCard.unplayable = YES;
                 }
-                
                 self.score += matchScore * MATCH_BONUS;
                 [results setObject:@(matchScore * MATCH_BONUS) forKey:@"flipScore"];
             } else {
@@ -66,19 +62,14 @@
                 for (Card *otherCard in cardsFacingUp) {
                     otherCard.faceUp = NO;
                 }
-                
                 self.score -= MISMATCH_PENALTY;
                 [results setObject:@(-MISMATCH_PENALTY) forKey:@"flipScore"];
             }
         }
-        
         self.score -= FLIP_COST;
-        
     }
-    
     card.faceUp = !card.faceUp;
     self.flipResults = [results copy];
-    
 }
 
 -(Card *)cardAtIndex:(NSUInteger)index
@@ -100,9 +91,8 @@
                 break;
             }
         }
-        
         //number of cards to match can be either 2 or 3.
-        if (numberOfCardsToMatch < 2 && numberOfCardsToMatch > 3) {
+        if (numberOfCardsToMatch < 2 || numberOfCardsToMatch > 3) {
             self = nil;
         } else self.numberOfCardsToMatch = numberOfCardsToMatch;
         

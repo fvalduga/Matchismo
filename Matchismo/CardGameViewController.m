@@ -53,14 +53,12 @@
     return nil;
 }
 
-
 - (CardMatchingGame *)game
 {
     if (!_game) {
         _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
                                                   usingDeck:[self createDeck]
                                                    matching:[self getNumberOfCardsToMatch]];
-
     }
     return _game;
 }
@@ -90,7 +88,6 @@
         
         [self updateCardButton:cardButton withCard:card];
     }
-    
     self.scoreLabel.text = [NSString stringWithFormat:@"score: %d", self.game.score];
     
     [self updateResultLabel:[self.flipsHistory lastObject]];

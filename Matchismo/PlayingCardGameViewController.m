@@ -62,7 +62,6 @@
     return cardContents;
 }
 
-
 -(void)setup
 {
     //initialization that can't wait intil viewDidLoad
