@@ -12,7 +12,8 @@
 
 @interface PlayingCardGameViewController ()
 
-
+#define CARD_UNPLAYABLE_TRANSPARENCY_VALUE 0.3
+#define CARD_SEPARATOR_CHARACTER @"&"
 
 @end
 
@@ -24,10 +25,15 @@
     return [[PlayingCardDeck alloc] init];
 }
 
--(NSUInteger) getNumberOfCardsToMatch
+- (NSUInteger)numberOfCardsToMatch
 {
     //Playing Card Matching Game matches 2 cards
     return 2;
+}
+
+- (NSDictionary *)getGameOptions
+{
+    return @{@"matchBonus": @(4), @"mismatchPenalty": @(2), @"flipCost": @(1)};
 }
 
 -(void)updateCardButton:(UIButton *)cardButton withCard:(Card *)card
@@ -35,7 +41,7 @@
     [cardButton setImage:card.isFaceUp ? nil : [UIImage imageNamed:@"backOfCard.png"] forState:UIControlStateNormal];
     [cardButton setTitle:card.contents forState:UIControlStateSelected];
     [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
-    cardButton.alpha = (card.isUnplayable) ? 0.3 : 1.0;
+    cardButton.alpha = (card.isUnplayable) ? CARD_UNPLAYABLE_TRANSPARENCY_VALUE : 1.0;
 }
 
 - (NSMutableAttributedString *) getCardsFlippedContents:(NSArray *)cardsFlipped
@@ -53,7 +59,7 @@
                 [cardContents appendAttributedString:[[NSAttributedString alloc] initWithString:card.contents]];
                 
                 if (i < [cardsFlipped count] - 1) {
-                    [cardContents appendAttributedString:[[NSAttributedString alloc] initWithString:@","]];//separator
+                    [cardContents appendAttributedString:[[NSAttributedString alloc] initWithString:CARD_SEPARATOR_CHARACTER]];
                 }
             }
         }

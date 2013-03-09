@@ -14,14 +14,14 @@
 -(int)match:(NSArray *)otherCards
 {
     int score = 0;
-   
+    
     //Set of 3 cards
     if ([otherCards count] == 2) {
         
         BOOL numberMatched = NO;
-        BOOL colorMatched = NO;
-        BOOL shapeMatched = NO;
+        BOOL symbolMatched = NO;
         BOOL shadingMatched = NO;
+        BOOL colorMatched = NO;
         
         SetCard *c1 = self;
         SetCard *c2 = nil;
@@ -36,23 +36,16 @@
         
         //check if numbers are the same or different from each other
         
-        if ((c1.number == c2.number && c1.number == c3.number) || 
-            (c1.number != c2.number && c1.number != c3.number && c2.number != c3.number)) { 
+        if ((c1.number == c2.number && c1.number == c3.number) ||
+            (c1.number != c2.number && c1.number != c3.number && c2.number != c3.number)) {
             numberMatched = YES;
         }
         
-        //check if colors are the same or different from each other
+        //check if symbols are the same or different from each other
         
-        if (([c1.color isEqualToString:c2.color] && [c1.color isEqualToString:c3.color]) ||
-            (![c1.color isEqualToString:c2.color] && ![c1.color isEqualToString:c3.color] && ![c2.color isEqualToString:c3.color])) {
-            colorMatched = YES;
-        }
-        
-        //check if shapes are the same or different from each other
-        
-        if (([c1.shape isEqualToString:c2.shape] && [c1.shape isEqualToString:c3.shape]) ||
-            (![c1.shape isEqualToString:c2.shape] && ![c1.shape isEqualToString:c3.shape] && ![c2.shape isEqualToString:c3.shape])) {
-            shapeMatched = YES;
+        if (([c1.symbol isEqualToString:c2.symbol] && [c1.symbol isEqualToString:c3.symbol]) ||
+            (![c1.symbol isEqualToString:c2.symbol] && ![c1.symbol isEqualToString:c3.symbol] && ![c2.symbol isEqualToString:c3.symbol])) {
+            symbolMatched = YES;
         }
         
         //check if shading are the same or different from each other
@@ -62,9 +55,16 @@
             shadingMatched = YES;
         }
         
+        //check if colors are the same or different from each other
         
-        if (numberMatched && colorMatched && shapeMatched && shadingMatched) {
-            score = 2;
+        if (([c1.color isEqualToString:c2.color] && [c1.color isEqualToString:c3.color]) ||
+            (![c1.color isEqualToString:c2.color] && ![c1.color isEqualToString:c3.color] && ![c2.color isEqualToString:c3.color])) {
+            colorMatched = YES;
+        }
+        
+        
+        if (numberMatched && colorMatched && symbolMatched && shadingMatched) {
+            score = 1;
         }
         
         
@@ -73,38 +73,36 @@
     return score;
 }
 
-//Return shapes
 -(NSString *)contents
 {
-    return [self.shape stringByPaddingToLength:self.number withString:self.shape startingAtIndex:0];
+    return [NSString stringWithFormat:@"%d %@ %@ %@",self.number,self.symbol,self.shading,self.color];
 }
 
 -(NSString *)description
 {
-    return [self.contents stringByAppendingFormat:@"-%@-%@",self.color,self.shading];
+    return [self contents];
 }
 
-+(NSArray *)validColors
-{
-    static NSArray *colors = nil;
-    if (!colors) colors = @[@"red",@"green",@"blue"];
-    return colors;
-}
-
-+(NSArray *)validShapes
++(NSArray *)validSymbols
 {
     static NSArray *shapes = nil;
-    if (!shapes) shapes = @[@"■",@"●",@"▲"];
+    if (!shapes) shapes = @[@"diamond",@"squiggle",@"oval"];
     return shapes;
 }
 
 +(NSArray *)validShadings
 {
     static NSArray *shadings = nil;
-    if (!shadings) shadings = @[@"solid",@"faded",@"open"];
+    if (!shadings) shadings = @[@"solid",@"striped",@"open"];
     return shadings;
 }
 
++(NSArray *)validColors
+{
+    static NSArray *colors = nil;
+    if (!colors) colors = @[@"red",@"green",@"purple"];
+    return colors;
+}
 
 -(void)setNumber:(NSUInteger)number
 {
@@ -121,10 +119,10 @@
     }
 }
 
--(void)setShape:(NSString *)shape
+-(void)setSymbol:(NSString *)symbol
 {
-    if ([[SetCard validShapes] containsObject:shape]) {
-        _shape = shape;
+    if ([[SetCard validSymbols] containsObject:symbol]) {
+        _symbol = symbol;
     }
 }
 

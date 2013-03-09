@@ -7,10 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Deck.h"
 
 
 @interface CardGameViewController : UIViewController
 
+@property (nonatomic) NSUInteger numberOfCardsToMatch; //abstract
 
+- (Deck *)createDeck; //abstract
+- (NSDictionary *)getGameOptions; //abstract
+- (void)updateCardButton:(UIButton *)cardButton withCard:(Card *)card; //abstract
+- (NSMutableAttributedString *) getCardsFlippedContents:(NSArray *)cardsFlipped; //abstract
 
 @end

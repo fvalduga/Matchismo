@@ -22,7 +22,7 @@
 
 //Designated Initializer
 -(id)initWithCardCount:(NSUInteger)count
-usingDeck:(Deck *)deck matching: (NSUInteger) numberOfCardsToMatch;
+usingDeck:(Deck *)deck matching: (NSUInteger) numberOfCardsToMatch gameOptions: (NSDictionary *)gameoptions;
 
 -(void)flipCardAtIndex:(NSUInteger)index;
 -(Card *)cardAtIndex:(NSUInteger)index;

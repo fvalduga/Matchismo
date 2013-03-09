@@ -29,6 +29,8 @@
 
 
 #define DEFAULT_FONT_SIZE 13
+#define CARD_EDGE_INSET 4.0
+#define RESULT_LABEL_FADED_ALPHA_VALUE 0.4
 
 -(void)updateCardButton:(UIButton *)cardButton withCard:(Card *)card
 {
@@ -41,10 +43,16 @@
     return nil;
 }
 
--(NSUInteger)getNumberOfCardsToMatch
+-(NSUInteger)numberOfCardsToMatch
 {
     //implemented in subclass
     return 0;
+}
+
+- (NSDictionary *)getGameOptions
+{
+    //implemented in subclass
+    return nil;
 }
 
 - (NSMutableAttributedString *) getCardsFlippedContents:(NSArray *)cardsFlipped
@@ -58,7 +66,8 @@
     if (!_game) {
         _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
                                                   usingDeck:[self createDeck]
-                                                   matching:[self getNumberOfCardsToMatch]];
+                                                   matching:self.numberOfCardsToMatch
+                                                gameOptions:[self getGameOptions]];
     }
     return _game;
 }
@@ -75,7 +84,7 @@
     _cardButtons = cardButtons;
     
     for (UIButton *button in self.cardButtons) {
-        button.imageEdgeInsets = UIEdgeInsetsMake(4.0,4.0,4.0,4.0);
+        button.imageEdgeInsets = UIEdgeInsetsMake(CARD_EDGE_INSET,CARD_EDGE_INSET,CARD_EDGE_INSET,CARD_EDGE_INSET);
     }
 }
 
@@ -112,7 +121,7 @@
     
     NSMutableAttributedString *flipResultText = [self getCardsFlippedContents:cardsFlipped];
     
-    if ([cardsFlipped count] == [self getNumberOfCardsToMatch]) {
+    if ([cardsFlipped count] == self.numberOfCardsToMatch) {
         if (score > 0) {
             [flipResultText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" matched for %d points!", score]]];
         } else {
@@ -156,7 +165,7 @@
     }
     //fade result label when checking flips history
     if (sender.value != ([self.flipsHistory count] - 1)) {
-        self.resultLabel.alpha = 0.4;
+        self.resultLabel.alpha = RESULT_LABEL_FADED_ALPHA_VALUE;
     } else {
         self.resultLabel.alpha = 1.0;
     }
@@ -166,6 +175,11 @@
 {
     [super viewDidLoad];
     [self updateUI];
+}
+
+- (void) viewWillAppear:(BOOL)animated
+{
+    [self dealPressed];
 }
 
 @end
