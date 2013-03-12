@@ -107,7 +107,7 @@
 {
     NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithString:@"Result: "];
     
-    if (flipResult || [flipResult isKindOfClass:[NSAttributedString class]]) {
+    if (flipResult && [flipResult isKindOfClass:[NSAttributedString class]]) {
         [result appendAttributedString: flipResult];
     }
     [result addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:DEFAULT_FONT_SIZE] range:NSMakeRange(0, [result length])];
