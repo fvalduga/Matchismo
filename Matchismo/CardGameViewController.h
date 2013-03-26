@@ -13,10 +13,10 @@
 @interface CardGameViewController : UIViewController
 
 @property (nonatomic) NSUInteger numberOfCardsToMatch; //abstract
+@property (nonatomic) NSUInteger startingCardCount; //abstract
 
 - (Deck *)createDeck; //abstract
 - (NSDictionary *)getGameOptions; //abstract
-- (void)updateCardButton:(UIButton *)cardButton withCard:(Card *)card; //abstract
-- (NSMutableAttributedString *) getCardsFlippedContents:(NSArray *)cardsFlipped; //abstract
+-(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)card; //abstract
 
 @end

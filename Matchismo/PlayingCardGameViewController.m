@@ -9,16 +9,18 @@
 #import "PlayingCardGameViewController.h"
 #import "PlayingCardDeck.h"
 #import "PlayingCard.h"
+#import "PlayingCardCollectionViewCell.h"
 
 @interface PlayingCardGameViewController ()
 
-#define CARD_UNPLAYABLE_TRANSPARENCY_VALUE 0.3
-#define CARD_SEPARATOR_CHARACTER @"&"
+
 
 @end
 
 @implementation PlayingCardGameViewController
 
+#define CARD_UNPLAYABLE_TRANSPARENCY_VALUE 0.3
+#define CARD_SEPARATOR_CHARACTER @"&"
 
 -(Deck *)createDeck
 {
@@ -31,42 +33,31 @@
     return 2;
 }
 
+-(NSUInteger)startingCardCount
+{
+    return 20;
+}
+
 - (NSDictionary *)getGameOptions
 {
     return @{@"matchBonus": @(4), @"mismatchPenalty": @(2), @"flipCost": @(1)};
 }
 
--(void)updateCardButton:(UIButton *)cardButton withCard:(Card *)card
+-(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)card
 {
-    [cardButton setImage:card.isFaceUp ? nil : [UIImage imageNamed:@"backOfCard.png"] forState:UIControlStateNormal];
-    [cardButton setTitle:card.contents forState:UIControlStateSelected];
-    [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
-    cardButton.alpha = (card.isUnplayable) ? CARD_UNPLAYABLE_TRANSPARENCY_VALUE : 1.0;
-}
-
-- (NSMutableAttributedString *) getCardsFlippedContents:(NSArray *)cardsFlipped
-{
-    NSMutableAttributedString *cardContents = [[NSMutableAttributedString alloc] initWithString:@""];
-    
-    if (cardsFlipped) {
-        
-        PlayingCard *card = nil;
-        
-        for (int i = 0;  i < [cardsFlipped count]; i++) {
+    if ([cell isKindOfClass:[PlayingCardCollectionViewCell class]]) {
+        PlayingCardView *playingCardView = ((PlayingCardCollectionViewCell *) cell).playingCardView;
+        if ([card isKindOfClass:[PlayingCard class]]) {
+            PlayingCard *playingCard = (PlayingCard *)card;
             
-            if ([cardsFlipped[i] isKindOfClass:[PlayingCard class]]) {
-                card = (PlayingCard *)cardsFlipped[i];
-                [cardContents appendAttributedString:[[NSAttributedString alloc] initWithString:card.contents]];
-                
-                if (i < [cardsFlipped count] - 1) {
-                    [cardContents appendAttributedString:[[NSAttributedString alloc] initWithString:CARD_SEPARATOR_CHARACTER]];
-                }
-            }
+            playingCardView.suit = playingCard.suit;
+            playingCardView.rank = playingCard.rank;
+            playingCardView.faceUp = playingCard.isFaceUp;
+            playingCardView.alpha = (playingCard.isUnplayable) ? CARD_UNPLAYABLE_TRANSPARENCY_VALUE : 1.0;
         }
     }
-    
-    return cardContents;
 }
+
 
 -(void)setup
 {
