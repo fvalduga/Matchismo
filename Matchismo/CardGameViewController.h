@@ -14,9 +14,11 @@
 
 @property (nonatomic) NSUInteger numberOfCardsToMatch; //abstract
 @property (nonatomic) NSUInteger startingCardCount; //abstract
+@property (nonatomic) NSUInteger numberOfCardsToDeal;//abstract
 
 - (Deck *)createDeck; //abstract
 - (NSDictionary *)getGameOptions; //abstract
 -(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)card; //abstract
+-(void)updateResultsInView:(UIView *)view usingCards:(NSArray *)cards withScore:(int)score; //abstract
 
 @end

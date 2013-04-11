@@ -44,22 +44,25 @@
     [self setNeedsDisplay];
 }
 
-#define CORNER_RADIUS 8.0
+#define CORNER_RADIUS 0.1 //percent of view bounds width
 
 
 #define HORIZONTAL_MARGIN 0.2 //Percent of view bounds width
 #define SYMBOL_HEIGHT 0.2 //Percent of view bounds height
 #define SYMBOL_OFFSET 0.05 //Percent of view bounds height
 
-#define STROKE_WIDTH 2.0
+#define STROKE_WIDTH 1.0
+#define STRIPE_LINE_GAP 0.1
 
 - (void)drawRect:(CGRect)rect
 {
-    UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:CORNER_RADIUS];
+    UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:self.bounds.size.width * CORNER_RADIUS];
     
     [roundedRect addClip];
     
-    [[UIColor whiteColor] setFill];
+    UIColor *backgroundColor = (self.faceUp) ? [UIColor colorWithWhite:0.75 alpha:1.0] : [UIColor whiteColor];
+    
+    [backgroundColor setFill];
     UIRectFill(self.bounds);
     
     [self.color setFill];
@@ -71,7 +74,7 @@
     
     CGRect symbolRect = CGRectInset(self.bounds, self.bounds.size.width * HORIZONTAL_MARGIN, self.bounds.size.height * SYMBOL_HEIGHT * 2);
     
-    UIBezierPath *symbolPath = [self drawSquiggleSymbolInRect:symbolRect];
+    UIBezierPath *symbolPath = [self drawSymbolInRect:symbolRect];
     [symbolPath setLineWidth:STROKE_WIDTH];
     
     // Translate context to start position according to total number of symbols
@@ -88,7 +91,7 @@
             [symbolPath stroke];
         } else if ([self.shading isEqualToString:@"solid"]) {
             [symbolPath fill];
-        } else {
+        } else if ([self.shading isEqualToString:@"striped"]) {
             [symbolPath stroke];
             CGContextSaveGState(context);
             [symbolPath addClip];
@@ -101,6 +104,21 @@
     
     CGContextRestoreGState(context);
     
+}
+
+- (UIBezierPath *)drawSymbolInRect: (CGRect)rect
+{
+    UIBezierPath *symbolPath = nil;
+    
+    if ([self.symbol isEqualToString:@"diamond"]) {
+        symbolPath = [self drawDiamondSymbolInRect:rect];
+    } else if ([self.symbol isEqualToString:@"squiggle"]) {
+        symbolPath = [self drawSquiggleSymbolInRect:rect];
+    } else if ([self.symbol isEqualToString:@"oval"]) {
+        symbolPath = [self drawOvalSymbolInRect:rect];
+    }
+    
+    return symbolPath;
 }
 
 - (UIBezierPath *)drawDiamondSymbolInRect: (CGRect)rect
@@ -144,11 +162,11 @@
 {
     UIBezierPath *squiggleShape = [UIBezierPath bezierPath];
     
-    //Rect is divided by 8 (width) by 8 segments (height) to distribute the points and control points that form the shape
+    //Rect is divided by 8 (width) by 8 segments (height) to distribute the points and control points
     
     [squiggleShape moveToPoint:CGPointMake(rect.origin.x , rect.origin.y + rect.size.height * 0.5)];
     [squiggleShape addCurveToPoint:CGPointMake(rect.origin.x + rect.size.width * 0.25, rect.origin.y + rect.size.height * 0.125)
-                     controlPoint1:CGPointMake(rect.origin.x , rect.origin.y + rect.size.height * 0.25)
+                     controlPoint1:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height * 0.25)
                      controlPoint2:CGPointMake(rect.origin.x + rect.size.width * 0.125, rect.origin.y + rect.size.height * 0.125)];
     
     [squiggleShape addCurveToPoint:CGPointMake(rect.origin.x + rect.size.width * 0.625, rect.origin.y + rect.size.height * 0.25)
@@ -176,7 +194,7 @@
                      controlPoint2:CGPointMake(rect.origin.x + rect.size.width * 0.25, rect.origin.y + rect.size.height)];
     
     [squiggleShape addCurveToPoint:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height * 0.5)
-                     controlPoint1:CGPointMake(rect.origin.x , rect.origin.y + rect.size.height)
+                     controlPoint1:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height)
                      controlPoint2:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height * 0.75)];
     
     [squiggleShape closePath];
@@ -188,7 +206,7 @@
 - (void) drawStripes:(CGRect)inRect;
 {
     UIBezierPath *stripes = [UIBezierPath bezierPath];    
-    CGFloat lineGap = inRect.size.width * 0.05;
+    CGFloat lineGap = inRect.size.width * STRIPE_LINE_GAP;
     
     for (CGFloat k = 0; k < inRect.size.width; k += lineGap) {
         [stripes moveToPoint:CGPointMake(inRect.origin.x + k, inRect.origin.y)];

@@ -22,7 +22,6 @@
 		BB1664EE16B942FE0079F85D /* Deck.m in Sources */ = {isa = PBXBuildFile; fileRef = BB1664ED16B942FE0079F85D /* Deck.m */; };
 		BB4E512016CFA58500D88223 /* PlayingCardGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB4E511F16CFA58500D88223 /* PlayingCardGameViewController.m */; };
 		BB6BF9CF16B94DCF00036139 /* PlayingCard.m in Sources */ = {isa = PBXBuildFile; fileRef = BB6BF9CE16B94DCE00036139 /* PlayingCard.m */; };
-		BB80FF5916C2CC73007E4392 /* backOfCard.png in Resources */ = {isa = PBXBuildFile; fileRef = BB80FF5816C2CC73007E4392 /* backOfCard.png */; };
 		BB88FB6B1701376F00C29937 /* PlayingCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BB88FB6A1701376F00C29937 /* PlayingCardCollectionViewCell.m */; };
 		BB88FB6E17014AD900C29937 /* SetCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BB88FB6D17014AD900C29937 /* SetCardCollectionViewCell.m */; };
 		BB8CB0BD16EEC24200E7C12A /* cardback.png in Resources */ = {isa = PBXBuildFile; fileRef = BB8CB0A316EEC24200E7C12A /* cardback.png */; };
@@ -84,7 +83,6 @@
 		BB4E511F16CFA58500D88223 /* PlayingCardGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayingCardGameViewController.m; sourceTree = "<group>"; };
 		BB6BF9CD16B94DCE00036139 /* PlayingCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayingCard.h; path = Model/PlayingCard.h; sourceTree = "<group>"; };
 		BB6BF9CE16B94DCE00036139 /* PlayingCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayingCard.m; path = Model/PlayingCard.m; sourceTree = "<group>"; };
-		BB80FF5816C2CC73007E4392 /* backOfCard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backOfCard.png; sourceTree = "<group>"; };
 		BB80FF5A16C2CD3C007E4392 /* CardMatchingGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CardMatchingGame.h; path = Model/CardMatchingGame.h; sourceTree = "<group>"; };
 		BB88FB691701376F00C29937 /* PlayingCardCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingCardCollectionViewCell.h; sourceTree = "<group>"; };
 		BB88FB6A1701376F00C29937 /* PlayingCardCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayingCardCollectionViewCell.m; sourceTree = "<group>"; };
@@ -230,7 +228,6 @@
 				BB1664EA16B940660079F85D /* Card.m */,
 				BB1664EC16B942FD0079F85D /* Deck.h */,
 				BB1664ED16B942FE0079F85D /* Deck.m */,
-				BB80FF5816C2CC73007E4392 /* backOfCard.png */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -323,7 +320,6 @@
 				BB1664DB16B934770079F85D /* Default@2x.png in Resources */,
 				BB1664DD16B934770079F85D /* Default-568h@2x.png in Resources */,
 				BB1664E016B934770079F85D /* MainStoryboard.storyboard in Resources */,
-				BB80FF5916C2CC73007E4392 /* backOfCard.png in Resources */,
 				BB8CB0BD16EEC24200E7C12A /* cardback.png in Resources */,
 				BB8CB0BE16EEC24200E7C12A /* J♠.jpg in Resources */,
 				BB8CB0BF16EEC24200E7C12A /* J♠@2x.jpg in Resources */,

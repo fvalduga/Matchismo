@@ -13,18 +13,16 @@
 @interface CardMatchingGame : NSObject
 
 @property (readonly, nonatomic) int score;
-
-/* NSDictionary that represent flip card results. It contains 2 keys:
-    @"cardsFlipped" : NSArray with cards flipped
-    @"flipScore"    : NSNumber with match score or penalty
-*/
-@property (readonly, strong, nonatomic) NSDictionary *flipResults;
+@property (nonatomic) int flipScore;
+@property (strong, nonatomic) NSArray *flippedCards; //of Cards
+@property (nonatomic) NSUInteger numberOfCardsInPlay;
 
 //Designated Initializer
--(id)initWithCardCount:(NSUInteger)count
-usingDeck:(Deck *)deck matching: (NSUInteger) numberOfCardsToMatch gameOptions: (NSDictionary *)gameoptions;
+-(id)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck matching: (NSUInteger) numberOfCardsToMatch gameOptions: (NSDictionary *)gameoptions;
 
 -(void)flipCardAtIndex:(NSUInteger)index;
 -(Card *)cardAtIndex:(NSUInteger)index;
+-(void)removeCardAtIndex:(NSUInteger)index;
+-(NSUInteger)dealMoreCards:(NSUInteger)numberOfCards;
 
 @end

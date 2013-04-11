@@ -18,7 +18,7 @@
 
 @synthesize faceCardScaleFactor = _faceCardScaleFactor;
 
-#define DEFAULT_FACE_CARD_SCALE_FACTOR 0.90
+#define DEFAULT_FACE_CARD_SCALE_FACTOR 0.80
 
 - (CGFloat)faceCardScaleFactor
 {
@@ -57,12 +57,12 @@
 
 #pragma mark - Drawing
 
-#define CORNER_RADIUS 12.0
+#define CORNER_RADIUS 0.1 //Percentage of view width
 
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
-    UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:CORNER_RADIUS];
+    UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:self.bounds.size.width * CORNER_RADIUS];
     
     [roundedRect addClip];
     
