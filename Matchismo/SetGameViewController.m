@@ -57,7 +57,7 @@
             
             setCardView.number = setCard.number;
             setCardView.symbol = setCard.symbol;
-            setCardView.color = [self getColorFromString:setCard.color];
+            setCardView.color = setCard.color;
             setCardView.shading = setCard.shading;
             
             setCardView.faceUp = setCard.isFaceUp;
@@ -80,7 +80,7 @@
             setCardView.faceUp = YES;
             setCardView.number = setCard.number;
             setCardView.symbol = setCard.symbol;
-            setCardView.color = [self getColorFromString:setCard.color];
+            setCardView.color = setCard.color;
             setCardView.shading = setCard.shading;
 
             
@@ -106,22 +106,6 @@
         [view addSubview:resultText];
     }
 }
-
--(UIColor *)getColorFromString:(NSString *)colorString
-{
-    UIColor *color = [UIColor blackColor]; //default
-    
-    if ([colorString isEqualToString:@"red"]) {
-        color = [UIColor redColor];
-    } else if ([colorString isEqualToString:@"green"]) {
-        color = [UIColor greenColor];
-    } else if ([colorString isEqualToString:@"purple"]) {
-        color = [UIColor purpleColor];
-    }
- 
-    return color;
-}
-
 
 -(void)setup
 {

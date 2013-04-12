@@ -26,7 +26,7 @@
     [self setNeedsDisplay];
 }
 
-- (void)setColor:(UIColor *)color
+- (void)setColor:(NSString *)color
 {
     _color = color;
     [self setNeedsDisplay];
@@ -52,7 +52,7 @@
 #define SYMBOL_OFFSET 0.05 //Percent of view bounds height
 
 #define STROKE_WIDTH 1.0
-#define STRIPE_LINE_GAP 0.1
+#define STRIPE_LINE_GAP 0.1 //Percent of rect bounds width
 
 - (void)drawRect:(CGRect)rect
 {
@@ -65,8 +65,8 @@
     [backgroundColor setFill];
     UIRectFill(self.bounds);
     
-    [self.color setFill];
-    [self.color setStroke];
+    [[self getColorFromString:self.color] setFill];
+    [[self getColorFromString:self.color] setStroke];
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -104,6 +104,21 @@
     
     CGContextRestoreGState(context);
     
+}
+
+-(UIColor *)getColorFromString:(NSString *)colorString
+{
+    UIColor *color = [UIColor blackColor]; //default
+    
+    if ([colorString isEqualToString:@"red"]) {
+        color = [UIColor redColor];
+    } else if ([colorString isEqualToString:@"green"]) {
+        color = [UIColor greenColor];
+    } else if ([colorString isEqualToString:@"purple"]) {
+        color = [UIColor purpleColor];
+    }
+    
+    return color;
 }
 
 - (UIBezierPath *)drawSymbolInRect: (CGRect)rect

@@ -10,10 +10,18 @@
 
 @interface SetCardView : UIView
 
+//Number should be an integer between 1 and 3
 @property (nonatomic) NSUInteger number;
+
+//Symbols are @"diamond", @"oval" or "squiggle"
 @property (nonatomic, strong) NSString *symbol;
-@property (nonatomic, strong) UIColor *color;
+
+//Colors are @"red", @"green" or @"purple"
+@property (nonatomic, strong) NSString *color;
+
+//Shadings are @"open", @"solid" or @"striped"
 @property (nonatomic, strong) NSString *shading;
+
 @property (nonatomic) BOOL faceUp;
 
 @end
