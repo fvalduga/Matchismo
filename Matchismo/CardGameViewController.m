@@ -9,6 +9,7 @@
 #import "CardGameViewController.h"
 #import "CardMatchingGame.h"
 #import "PlayingCardView.h"
+#import "GameResult.h"
 
 
 @interface CardGameViewController ()<UICollectionViewDataSource,UICollectionViewDelegate>
@@ -16,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UICollectionView *cardCollectionView;
 @property (strong, nonatomic) CardMatchingGame *game;
+@property (strong, nonatomic) GameResult *gameResult;
 @property (weak, nonatomic) IBOutlet UIView *resultView;
 
 
@@ -64,15 +66,28 @@
     return nil;
 }
 
+- (NSString *)getGameType
+{
+    //implemented in subclass
+    return nil;
+}
+
 - (CardMatchingGame *)game
 {
     if (!_game) {
-        _game = [[CardMatchingGame alloc] initWithCardCount:self.startingCardCount
-                                                  usingDeck:[self createDeck]
-                                                   matching:self.numberOfCardsToMatch
-                                                gameOptions:[self getGameOptions]];
+        _game = [[CardMatchingGame alloc] initWithDeck:[self createDeck] gameOptions:[self getGameOptions]];
     }
     return _game;
+}
+
+- (GameResult *)gameResult
+{
+    if (!_gameResult) {
+        _gameResult = [[GameResult alloc] init];
+        _gameResult.gameType = [self getGameType];
+    }
+    
+    return _gameResult;
 }
 
 - (void)updateUI
@@ -103,6 +118,7 @@
         [self clearResultView];
         [self updateResultsInView:self.resultView usingCards:self.game.flippedCards withScore:self.game.flipScore];
         [self updateUI];
+        self.gameResult.score = self.game.score;
     }
 }
 
@@ -115,7 +131,8 @@
 
 - (IBAction)restartGame
 {
-    self.game = nil; //recreate game when the getter is called in updateUI (Lazy Instantiation)
+    self.game = nil; //recreate game when the getter is called (Lazy Instantiation)
+    self.gameResult = nil;
     [self.cardCollectionView reloadData];
     [self clearResultView];
     [self updateUI];

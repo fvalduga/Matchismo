@@ -21,20 +21,15 @@
 #define RESULT_VIEW_CARD_HEIGHT 50.0
 #define RESULT_VIEW_CARD_SPACING 40.0
 
+#define CARD_COUNT_KEY @"cardCount"
+#define N_CARD_MATCH_KEY @"numberOfCardsToMatch"
+#define MATCH_BONUS_KEY @"matchBonus"
+#define MISMATCH_PENALTY_KEY @"mismatchPenalty"
+#define FLIP_COST_KEY @"flipCost"
+
 -(Deck *)createDeck
 {
     return [[SetCardDeck alloc] init];
-}
-
-- (NSUInteger)numberOfCardsToMatch
-{
-    //Set Game matches 3 cards
-    return 3;
-}
-
--(NSUInteger)startingCardCount
-{
-    return 12;
 }
 
 -(NSUInteger)numberOfCardsToDeal
@@ -43,8 +38,13 @@
 }
 
 - (NSDictionary *)getGameOptions
+{  
+    return @{CARD_COUNT_KEY : @(12), N_CARD_MATCH_KEY : @(3), MATCH_BONUS_KEY : @(5), MISMATCH_PENALTY_KEY : @(5), FLIP_COST_KEY : @(0)};
+}
+
+- (NSString *)getGameType
 {
-    return @{@"matchBonus": @(5), @"mismatchPenalty": @(5), @"flipCost": @(0)};
+    return @"S"; // S for Set Game
 }
 
 -(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)card

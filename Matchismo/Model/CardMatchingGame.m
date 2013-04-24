@@ -11,11 +11,12 @@
 @interface CardMatchingGame()
 
 @property (readwrite, nonatomic) int score;
-@property (nonatomic) NSUInteger numberOfCardsToMatch;
-
-// Keys (@"matchBonus",@"mismatchPenalty",@"flipCost") values: NSNumber as integers
-@property (strong, nonatomic) NSDictionary *gameOptions;
+@property (readwrite, nonatomic) int flipScore;
 @property (strong, nonatomic) Deck *deck;
+@property (nonatomic) int bonus;
+@property (nonatomic) int penalty;
+@property (nonatomic) int flipCost;
+@property (nonatomic) int numberOfCardsToMatch;
 @property (strong, nonatomic) NSMutableArray *cards;
 
 @end
@@ -24,6 +25,12 @@
 
 #define MINIMUM_CARDS_TO_MATCH 2
 #define MAXIMUM_CARDS_TO_MATCH 3
+
+#define CARD_COUNT_KEY @"cardCount"
+#define N_CARD_MATCH_KEY @"numberOfCardsToMatch"
+#define MATCH_BONUS_KEY @"matchBonus"
+#define MISMATCH_PENALTY_KEY @"mismatchPenalty"
+#define FLIP_COST_KEY @"flipCost"
 
 - (NSMutableArray *)cards
 {
@@ -39,25 +46,9 @@
     return _numberOfCardsInPlay;
 }
 
-//-(NSArray *)flippedCards
-//{
-//    NSMutableArray *cards = [[NSMutableArray alloc] init];
-//    
-//    for (Card *card in self.cards) {
-//        if (!card.isUnplayable && card.faceUp) {
-//            [cards addObject:card];
-//        }
-//    }
-//    return cards;
-//}
-
 -(void)flipCardAtIndex:(NSUInteger)index
 {
     Card *card = [self cardAtIndex:index];
-    
-    int bonus = ([[self.gameOptions valueForKey:@"matchBonus"] isKindOfClass:[NSNumber class]]) ? [[self.gameOptions valueForKey:@"matchBonus"] integerValue] : 0;
-    int penalty = ([[self.gameOptions valueForKey:@"mismatchPenalty"] isKindOfClass:[NSNumber class]]) ? [[self.gameOptions valueForKey:@"mismatchPenalty"] integerValue] : 0;
-    int flipCost = ([[self.gameOptions valueForKey:@"flipCost"] isKindOfClass:[NSNumber class]]) ? [[self.gameOptions valueForKey:@"flipCost"] integerValue] : 0;
     
     NSMutableArray *cardsFacingUp = [[NSMutableArray alloc] init];
     
@@ -79,7 +70,7 @@
                 for (Card *otherCard in cardsFacingUp) {
                     otherCard.unplayable = YES;
                 }
-                self.flipScore = matchScore * bonus;
+                self.flipScore = matchScore * self.bonus;
                 self.score += self.flipScore;
                 
             } else {
@@ -87,11 +78,11 @@
                 for (Card *otherCard in cardsFacingUp) {
                     otherCard.faceUp = NO;
                 }
-                self.flipScore = - penalty;
+                self.flipScore = - self.penalty;
                 self.score += self.flipScore;
             }
         }
-        self.score -= flipCost;
+        self.score -= self.flipCost;
         self.flippedCards = [cardsFacingUp arrayByAddingObject:card];
     }
     card.faceUp = !card.faceUp;
@@ -125,13 +116,23 @@
     return cardsAdded;
 }
 
--(id)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck matching: (NSUInteger) numberOfCardsToMatch gameOptions:(NSDictionary *)gameOptions
+-(id)initWithDeck:(Deck *)deck gameOptions:(NSDictionary *)gameOptions
 {
     self = [super init];
     
     if (self) {
+        
+        int cardCount = ([gameOptions[CARD_COUNT_KEY] isKindOfClass:[NSNumber class]]) ? [gameOptions[CARD_COUNT_KEY] intValue] : 0;
+        int cardsToMatch = ([gameOptions[N_CARD_MATCH_KEY] isKindOfClass:[NSNumber class]]) ? [gameOptions[N_CARD_MATCH_KEY] intValue] : 0;
+        
+        _bonus = ([gameOptions[MATCH_BONUS_KEY] isKindOfClass:[NSNumber class]]) ? [gameOptions[MATCH_BONUS_KEY] intValue] : 0;
+        _penalty = ([gameOptions[MISMATCH_PENALTY_KEY] isKindOfClass:[NSNumber class]]) ? [gameOptions[MISMATCH_PENALTY_KEY] intValue] : 0;
+        _flipCost = ([gameOptions[FLIP_COST_KEY] isKindOfClass:[NSNumber class]]) ? [gameOptions[FLIP_COST_KEY] intValue] : 0;
+        _deck = deck;
+        _numberOfCardsInPlay = cardCount;
+        
         // Checking if deck has enough cards
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < cardCount; i++) {
             Card *card = [deck drawRandomCard];
             if (card) {
                 self.cards[i] = card;
@@ -140,17 +141,10 @@
                 break;
             }
         }
-        self.deck = deck;
-        self.numberOfCardsInPlay = count;
-        
-        if (numberOfCardsToMatch < MINIMUM_CARDS_TO_MATCH || numberOfCardsToMatch > MAXIMUM_CARDS_TO_MATCH) {
-            self = nil;
-        } else {
-            self.numberOfCardsToMatch = numberOfCardsToMatch;
-        }
-        
-        if (gameOptions) {
-            self.gameOptions = gameOptions;
+
+        //Checking of numberOfCardsToMatch is within limits
+        if (cardsToMatch >= MINIMUM_CARDS_TO_MATCH || cardsToMatch <= MAXIMUM_CARDS_TO_MATCH) {
+            _numberOfCardsToMatch = cardsToMatch;
         } else {
             self = nil;
         }

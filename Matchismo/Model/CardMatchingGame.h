@@ -13,12 +13,13 @@
 @interface CardMatchingGame : NSObject
 
 @property (readonly, nonatomic) int score;
-@property (nonatomic) int flipScore;
+@property (readonly, nonatomic) int flipScore;
 @property (strong, nonatomic) NSArray *flippedCards; //of Cards
 @property (nonatomic) NSUInteger numberOfCardsInPlay;
 
 //Designated Initializer
--(id)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck matching: (NSUInteger) numberOfCardsToMatch gameOptions: (NSDictionary *)gameoptions;
+//gameOptions - ( Keys: [@"cardCount",@"numberOfCardsToMatch",@"matchBonus",@"mismatchPenalty",@"flipCost"] values: NSNumber as integers )
+-(id)initWithDeck:(Deck *)deck gameOptions: (NSDictionary *)gameOptions;
 
 -(void)flipCardAtIndex:(NSUInteger)index;
 -(Card *)cardAtIndex:(NSUInteger)index;

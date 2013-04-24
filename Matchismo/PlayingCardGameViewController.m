@@ -26,25 +26,25 @@
 #define RESULT_VIEW_CARD_HEIGHT 50.0
 #define RESULT_VIEW_CARD_SPACING 40.0
 
+#define CARD_COUNT_KEY @"cardCount"
+#define N_CARD_MATCH_KEY @"numberOfCardsToMatch"
+#define MATCH_BONUS_KEY @"matchBonus"
+#define MISMATCH_PENALTY_KEY @"mismatchPenalty"
+#define FLIP_COST_KEY @"flipCost"
+
 -(Deck *)createDeck
 {
     return [[PlayingCardDeck alloc] init];
 }
 
-- (NSUInteger)numberOfCardsToMatch
-{
-    //Playing Card Matching Game matches 2 cards
-    return 2;
-}
-
--(NSUInteger)startingCardCount
-{
-    return 22;
-}
-
 - (NSDictionary *)getGameOptions
 {
-    return @{@"matchBonus": @(4), @"mismatchPenalty": @(2), @"flipCost": @(1)};
+    return @{CARD_COUNT_KEY : @(22), N_CARD_MATCH_KEY : @(2), MATCH_BONUS_KEY : @(4), MISMATCH_PENALTY_KEY : @(2), FLIP_COST_KEY : @(1)};
+}
+
+- (NSString *)getGameType
+{
+    return @"P"; // P for PlayingCard game
 }
 
 -(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)card
